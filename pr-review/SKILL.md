@@ -1,13 +1,13 @@
 ---
 name: pr-review
-description: Review a GitHub pull request by PR number (format #0000) with focus on SOLID, DRY, security vulnerabilities, and engineering best practices.
+description: Review a GitHub pull request by PR number with focus on SOLID, DRY, security vulnerabilities, and engineering best practices.
 ---
 
 # PR Review
 
 ## Overview
 
-Perform a structured, review-only analysis of a GitHub PR using a required PR number input in the format `#0000`.
+Perform a structured, review-only analysis of a GitHub PR using a required PR number.
 
 This skill focuses on:
 - SOLID principle violations
@@ -17,11 +17,8 @@ This skill focuses on:
 
 ## Required Input
 
-- A PR number in the exact format: `#0000` (a `#` followed by 4 digits).
+- A PR number
 - If missing or invalid, ask the user to provide it before continuing.
-
-Validation rule:
-- Must match regex: `^#[0-9]{4}$`
 
 Normalization rule:
 - Strip `#` and leading zeros to get the numeric PR value for CLI commands.
@@ -30,7 +27,7 @@ Normalization rule:
 
 ### 1) Validate and resolve PR number
 
-- Confirm input matches `^#[0-9]{4}$`.
+- Confirm input has a PR number
 - Convert to numeric PR id for commands (e.g., `#0042` -> `42`).
 - If value resolves to 0, ask user to confirm a valid PR.
 
