@@ -53,22 +53,41 @@ Use a temporary, PR-specific worktree so the main working tree remains untouched
 
 Suggested flow:
 
-1. Determine repo root and choose a unique path, e.g. `.worktrees/pr-review-<id>-<timestamp>`.
-2. Fetch the PR head into a temporary local branch:
-   - `git fetch origin pull/<id>/head:pr-review-<id>`
-3. Create worktree from that branch:
+1. Determine repo root and use a deterministic path, e.g. `.worktrees/pr-review-<id>`.
+2. Remove stale review artifacts from previous interrupted runs:
+   - `git worktree remove .worktrees/pr-review-<id> --force 2>/dev/null || true`
+   - `git branch -D pr-review-<id> 2>/dev/null || true`
+3. Fetch the latest base branch ref used for diffing:
+   - `git fetch origin <baseRefName>`
+4. Fetch the PR head into a temporary local branch:
+   - `git fetch --force origin pull/<id>/head:pr-review-<id>`
+5. Create worktree from that branch:
    - `git worktree add <worktree_path> pr-review-<id>`
-4. Run all review commands against that worktree (`git -C <worktree_path> ...` or equivalent).
+6. Run all review commands against that worktree (`git -C <worktree_path> ...` or equivalent).
 
 ### 5) Gather diffs inside the worktree
 
-Use worktree-scoped commands for analysis:
+Use GitHub as the primary diff source so the review matches what appears in the PR UI:
 
-- `git -C <worktree_path> diff --stat origin/<baseRefName>...HEAD`
-- `git -C <worktree_path> diff origin/<baseRefName>...HEAD`
-
-Optional cross-check:
+- `gh pr diff <id> --name-only`
 - `gh pr diff <id>`
+
+If `gh` diff is unavailable, use a merge-base-anchored local fallback:
+
+1. `merge_base=$(git -C <worktree_path> merge-base origin/<baseRefName> HEAD)`
+2. `git -C <worktree_path> diff --stat "$merge_base" HEAD`
+3. `git -C <worktree_path> diff "$merge_base" HEAD`
+
+Avoid `origin/<baseRefName>...HEAD` as the primary source because stale refs can produce noisy, misleading diffs.
+
+### 5b) Triage diff size and relevance
+
+Before deep review:
+
+- Count changed files and estimate diff size from `gh pr diff <id> --name-only` and diff stat.
+- If the diff is large, review file-by-file (or by directory) instead of loading the entire patch at once.
+- Prioritize high-risk files first: auth/authz, data access, public API boundaries, and infra/config changes.
+- De-prioritize low-signal generated artifacts (lockfiles, compiled output, snapshots), but still note them in coverage.
 
 ### 6) Load review checklists
 
