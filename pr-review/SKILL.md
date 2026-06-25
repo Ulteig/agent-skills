@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: Review a GitHub pull request by PR number with focus on SOLID, DRY, security vulnerabilities, and engineering best practices.
+description: Review-only analysis of a GitHub pull request by number. Use when the user wants a PR reviewed, says "review PR #N", or asks to vet a pull request before merge.
 ---
 
 # PR Review
@@ -20,15 +20,25 @@ This skill focuses on:
 - A PR number
 - If missing or invalid, ask the user to provide it before continuing.
 
-Normalization rule:
-- Strip `#` and leading zeros to get the numeric PR value for CLI commands.
-
 ## Workflow
+
+If a TODO system exists, create one todo for each item below before doing any work, and do not start until every todo exists:
+
+1. Validate and resolve PR number
+2. Preflight checks
+3. Fetch PR metadata
+4. Create an isolated git worktree
+5. Gather the diff
+6. Triage diff size and relevance
+7. Load review checklists
+8. Perform the review
+9. Cleanup worktree and temp branch
+10. Output review
 
 ### 1) Validate and resolve PR number
 
 - Confirm input has a PR number
-- Convert to numeric PR id for commands (e.g., `#0042` -> `42`).
+- Strip `#` and leading zeros to get the numeric PR id for commands (e.g., `#0042` -> `42`).
 - If value resolves to 0, ask user to confirm a valid PR.
 
 ### 2) Preflight checks
@@ -49,7 +59,7 @@ Capture at least: `baseRefName`, `headRefName`, `title`, `url`, and changed file
 
 ### 4) Create an isolated git worktree for review (required)
 
-Use a temporary, PR-specific worktree so the main working tree remains untouched.
+The worktree is the review surface, not the diff source: it is where you read full files for context, grep the repo for duplication, and run tests against the PR head — all without touching the main working tree.
 
 Suggested flow:
 
@@ -65,14 +75,14 @@ Suggested flow:
    - `git worktree add <worktree_path> pr-review-<id>`
 6. Run all review commands against that worktree (`git -C <worktree_path> ...` or equivalent).
 
-### 5) Gather diffs inside the worktree
+### 5) Gather the diff
 
-Use GitHub as the primary diff source so the review matches what appears in the PR UI:
+`gh pr diff` is the diff of record, because it matches what appears in the PR UI:
 
 - `gh pr diff <id> --name-only`
 - `gh pr diff <id>`
 
-If `gh` diff is unavailable, use a merge-base-anchored local fallback:
+If `gh` is unavailable, fall back to a merge-base-anchored diff from the worktree:
 
 1. `merge_base=$(git -C <worktree_path> merge-base origin/<baseRefName> HEAD)`
 2. `git -C <worktree_path> diff --stat "$merge_base" HEAD`
@@ -97,16 +107,9 @@ Before deep review:
 
 ### 7) Perform the review
 
-Review every changed file with emphasis on:
+Apply the checklists loaded in step 6 to every changed file. The step is complete only when every changed file has been run against all three checklists and every finding is recorded with a severity and file:line — not before.
 
-1. **SOLID**
-   - SRP, OCP, LSP, ISP, DIP design regressions
-2. **DRY**
-   - duplicated logic, duplicated constants, repeated query/data-mapping patterns
-3. **Security**
-   - injection, XSS, auth/authz gaps, secrets, unsafe deserialization, race conditions
-4. **Best Practices**
-   - error handling, test coverage impact, boundary conditions, performance, logging/observability
+Then ensure all repo tests pass.
 
 ### 8) Cleanup worktree and temp branch (required, always)
 
