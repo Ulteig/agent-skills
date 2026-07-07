@@ -27,6 +27,7 @@ If a TODO system exists, create one todo for each item below before doing any wo
 1. Validate and resolve PR number
 2. Preflight checks
 3. Fetch PR metadata
+3b. Check CI/CD status
 4. Create an isolated git worktree
 5. Gather the diff
 6. Triage diff size and relevance
@@ -57,9 +58,21 @@ Use GitHub CLI:
 
 Capture at least: `baseRefName`, `headRefName`, `title`, `url`, and changed file list.
 
+Also evaluate the PR description (`body`):
+- Does it explain the *why* behind the change (not just the *what*)?
+- Does it reference a ticket, issue, or spec?
+- Does it match what the code actually does?
+- Flag a **P3 Low** finding if the description is missing, vague, or inconsistent with the implementation.
+
+### 3b) Check CI/CD status
+
+- `gh pr checks <id>`
+- If any required checks are **failing**, record a **P0 Critical** finding and note that the PR is not merge-ready regardless of code quality.
+- If checks are still **pending/running**, note this in the Coverage Notes section of the output.
+
 ### 4) Create an isolated git worktree for review (required)
 
-The worktree is the review surface, not the diff source: it is where you read full files for context, grep the repo for duplication, and run tests against the PR head — all without touching the main working tree.
+The worktree is the review surface, not the diff source: it is where you read full files for context and grep the repo for duplication — all without touching the main working tree.
 
 Suggested flow:
 
@@ -109,7 +122,9 @@ Before deep review:
 
 Apply the checklists loaded in step 6 to every changed file. The step is complete only when every changed file has been run against all three checklists and every finding is recorded with a severity and file:line — not before.
 
-Then ensure all repo tests pass.
+Also check test coverage statically:
+- For every new or modified production code file, verify that corresponding test additions or updates exist in the diff.
+- If production code is changed with no accompanying test changes, flag it as a **P2 Medium** finding unless the code is clearly non-testable (e.g., config, generated files, infra scripts).
 
 ### 8) Cleanup worktree and temp branch (required, always)
 
