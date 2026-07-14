@@ -1,5 +1,11 @@
 # Best Practices Checklist for PR Reviews
 
+## React
+- Only use `useEffect` when synchronizing with an external system
+  - `useEffect` + single `useState` should become `useMemo`
+  - `useEffect` to handle events should instead just use those events (e.g. `onClick` handler instead of `useEffect` reacting to something)
+  - The core rule of modern React development is to use useEffect only as an escape hatch to synchronize with external systems. According to the Official React Documentation, if your logic is not connecting to an external API, a browser API, a subscription, or a third-party widget, you likely do not need an effect.
+
 ## Correctness and Reliability
 - Boundary checks for null/empty/invalid input
 - Consistent error handling (no swallowed exceptions)
