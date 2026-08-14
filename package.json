@@ -2,7 +2,7 @@
   "name": "ulteig-skills",
   "version": "1.2.3",
   "private": true,
-  "description": "Matt Pocock's agent skills for real engineering",
+  "description": "Ulteig agent skills",
   "repository": {
     "type": "git",
     "url": "https://github.com/Ulteig/agent-skills"
