@@ -1,0 +1,5 @@
+interface:
+  display_name: "PR Create"
+  short_description: "Create a GitHub PR from the current branch"
+policy:
+  allow_implicit_invocation: false
