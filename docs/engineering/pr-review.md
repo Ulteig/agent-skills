@@ -31,7 +31,7 @@ No. The required review surface is a temporary worktree, and the helper itself o
 
 **What if Python is not installed?**
 
-The review stops at preflight and tells you exactly what is missing. The helper is the single source of the PR metadata, CI status, and diff, so there is no manual fallback path — install a Python 3 interpreter and rerun.
+The review stops at preflight and tells you exactly what is missing. The helper is the single source of the PR metadata, CI status, and diff, so there is no manual fallback path. Install a Python 3 interpreter and rerun.
 
 ## It's working if
 
