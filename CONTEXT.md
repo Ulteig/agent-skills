@@ -4,6 +4,10 @@ A collection of agent skills (slash commands and behaviors) loaded by Claude Cod
 
 ## Language
 
+**Skill link**:
+An entry in a local agent harness's skill directory that references a skill in this repository.
+_Avoid_: installed skill
+
 **Issue tracker**:
 The tool that hosts a repo's issues — GitHub Issues, Linear, a local `.scratch/` markdown convention, or similar. Skills like `to-tickets`, `to-spec`, and `triage` read from and write to it.
 _Avoid_: backlog manager, backlog backend, issue host
