@@ -1,0 +1,5 @@
+interface:
+  display_name: "Commit"
+  short_description: "Commit one atomic change with an intent-rich message"
+policy:
+  allow_implicit_invocation: false
