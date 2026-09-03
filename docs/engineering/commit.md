@@ -6,7 +6,7 @@ An existing index is treated as a deliberate boundary: staged work is committed 
 
 ## When to reach for it
 
-You invoke this by typing `/commit` — the skill won't run on its own. Reach for it when the work is ready and you want the repository history to preserve its intent, not merely the names of edited files.
+You invoke this by typing `/commit`; the skill won't run on its own. Reach for it when the work is ready and you want the repository history to preserve its intent, not merely the names of edited files.
 
 | Situation | Reach for |
 | --- | --- |

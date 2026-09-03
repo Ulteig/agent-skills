@@ -46,7 +46,7 @@ If a TODO system exists, create one todo for each of the ten steps below before 
 
 ### 2) Preflight checks
 
-All three are hard requirements; if any is missing, tell the user exactly what is missing (CLI/auth/repo access/Python) and stop — the review cannot proceed without them.
+All three are hard requirements; if any is missing, tell the user exactly what is missing (CLI/auth/repo access/Python) and stop. The review cannot proceed without them.
 
 - Confirm the current directory is a git repository.
 - Confirm `gh` is installed and authenticated for the target repo.
@@ -54,7 +54,7 @@ All three are hard requirements; if any is missing, tell the user exactly what i
 
 ### 3) Collect automated evidence
 
-Run the bundled `scripts/collect_review_bundle.py` helper now. It is the single collector of mechanical evidence — PR metadata, CI status, the GitHub diff, changed-file triage, possible missing tests, and a small set of obvious static candidates such as credential-like literals — and steps 4, 5, and 7 read from its output rather than re-running `gh` commands.
+Run the bundled `scripts/collect_review_bundle.py` helper now. It is the single collector of mechanical evidence: PR metadata, CI status, the GitHub diff, changed-file triage, possible missing tests, and a small set of obvious static candidates such as credential-like literals. Steps 4, 5, and 7 read from its output rather than re-running `gh` commands.
 
 - Linux/macOS: `python3 <skill-directory>/scripts/collect_review_bundle.py <id>`
 - Windows: `py <skill-directory>/scripts/collect_review_bundle.py <id>`
@@ -62,7 +62,7 @@ Run the bundled `scripts/collect_review_bundle.py` helper now. It is the single 
 
 The helper writes `review-bundle.json` and `pr.diff` to a temporary directory unless `--output-dir` is supplied. `pr.diff` is the diff of record: it is the `gh pr diff` output and matches what appears in the PR UI. The helper does not modify the current working tree, create a branch, or replace the required review worktree. Static results (`candidateFindings`) are candidates only: verify them against the code and project context before reporting them as findings.
 
-This step is complete only when `review-bundle.json` and `pr.diff` exist. If the helper fails, report its exact error to the user and stop — there is no manual fallback path. The helper never replaces the full-file review in step 8.
+This step is complete only when `review-bundle.json` and `pr.diff` exist. If the helper fails, report its exact error to the user and stop. There is no manual fallback path. The helper never replaces the full-file review in step 8.
 
 ### 4) Evaluate PR metadata
 
@@ -84,7 +84,7 @@ Read CI status from the bundle's `ci` object (`ci.failing`, `ci.pending`).
 
 ### 6) Create an isolated git worktree (required)
 
-The worktree is the review surface, not the diff source: it is where you read full files for context and grep the repo for duplication — all without touching the main working tree.
+The worktree is the review surface, not the diff source: it is where you read full files for context and grep the repo for duplication, all without touching the main working tree.
 
 1. Determine the repo root and use a deterministic path, e.g. `.worktrees/pr-review-<id>`.
 2. Remove stale review artifacts from previous interrupted runs:
@@ -119,7 +119,7 @@ Also check test coverage statically:
 - For every new or modified production code file, verify that corresponding test additions or updates exist in the diff.
 - If production code is changed with no accompanying test changes, flag it as a **P2 Medium** finding unless the code is clearly non-testable (e.g., config, generated files, infra scripts).
 
-The step is complete only when every changed file in `pr.diff` has been run against all three checklists and every finding is recorded with a severity and file:line — not before.
+The step is complete only when every changed file in `pr.diff` has been run against all three checklists and every finding is recorded with a severity and file:line, not before.
 
 ### 9) Cleanup worktree and temp branch (required, always)
 
@@ -132,7 +132,7 @@ If cleanup fails, report the exact command failure and remaining artifacts to th
 
 ### 10) Output the review
 
-Deliver the report in this structure, then stop — this skill is review-only. Implement fixes only when the user explicitly requests implementation.
+Deliver the report in this structure, then stop. This skill is review-only. Implement fixes only when the user explicitly requests implementation.
 
 ```markdown
 ## PR Review Summary

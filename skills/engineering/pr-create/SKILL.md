@@ -26,7 +26,7 @@ If the current branch is the same as the inferred base (e.g., both `main`), ask 
 
 ### 2) Check for uncommitted changes
 
-- `git status --porcelain` — if non-empty, warn the user there are uncommitted changes and ask whether to proceed anyway.
+- `git status --porcelain`: if non-empty, warn the user there are uncommitted changes and ask whether to proceed anyway.
 
 ### 3) Gather change information
 
@@ -47,7 +47,7 @@ Compose a description from the gathered information. Structure it as:
 ## Summary
 
 [One or two sentences summarizing what this PR does, derived from commit messages and the nature of the changes. Use ASD-STE100 to describe it.]
-- Use the commit messages as the primary source — they encode author intent.
+- Use the commit messages as the primary source because they encode author intent.
 - If there's a single well-written commit message, let it drive the summary.
 - If there are many small commits, group them by theme rather than listing each one.
 - Show the draft to the user and ask for edits before proceeding.
