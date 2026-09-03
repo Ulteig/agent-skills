@@ -1,6 +1,11 @@
 {
   "name": "ulteig-skills",
   "version": "1.2.3",
+  "description": "Ulteig's agent skills for real engineering — grilling, spec/ticket flows, TDD, code review, domain modelling and more.",
+  "author": {
+    "name": "Ulteig",
+    "url": "https://github.com/Ulteig"
+  },
   "skills": [
     "./skills/engineering/ask-matt",
     "./skills/engineering/diagnosing-bugs",
@@ -13,6 +18,7 @@
     "./skills/engineering/to-tickets",
     "./skills/engineering/wayfinder",
     "./skills/engineering/implement",
+    "./skills/engineering/commit",
     "./skills/engineering/prototype",
     "./skills/engineering/research",
     "./skills/engineering/domain-modeling",
