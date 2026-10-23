@@ -9,8 +9,8 @@ $ErrorActionPreference = 'Stop'
 # It is not a supported installer. Modifications to it, or requests for
 # modifications, will not be approved.
 #
-# Links all skills in the repository into the local skill directories used by
-# each agent harness:
+# Links all skills outside the deprecated/ and misc/ buckets into the local
+# skill directories used by each agent harness:
 #   - ~/.claude/skills  - Claude Code
 #   - ~/.agents/skills  - Codex and other Agent Skills-compatible harnesses
 # Each entry is a junction into this repo, so a `git pull` is all that's needed
@@ -157,7 +157,9 @@ $skills = @(
                 [StringSplitOptions]::RemoveEmptyEntries
             )
 
-            $segments -notcontains 'node_modules' -and $segments -notcontains 'deprecated'
+            $segments -notcontains 'node_modules' -and
+            $segments -notcontains 'deprecated' -and
+            $segments -notcontains 'misc'
         } |
         ForEach-Object {
             [pscustomobject] @{
