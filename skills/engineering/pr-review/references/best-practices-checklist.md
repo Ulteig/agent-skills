@@ -34,6 +34,12 @@
 - Useful metrics/tracing for critical paths
 - Failures are detectable and diagnosable
 
+## Comments
+- Comments that explain the PR/ticket rather than the code (they go stale the moment the PR merges)
+- Ticket/issue numbers embedded in code
+- Comments restating what the code already says
+- Important info in a `//` line that should be a doc comment
+
 ## Documentation
 - PR description explains intent and risk
 - Any behavior/config changes are documented

@@ -31,9 +31,49 @@
 - Copy-pasted mapping/transformation code
 - Repeated literals, magic strings, and constants
 - Similar queries or API calls implemented multiple times
+- For every new reusable component/class/etc, grep the repo for an existing thing that already does this; prefer extending it.
+
+## Behavior Placement
+
+- Ensure that methods are attached to the correct object. Logic that only reads or validates one object's data belongs on that object.
+
+```csharp
+// Wrong: validation of the request lives on the solver
+public class NewtonSolverRequest
+{
+    // properties..
+}
+public class NewtonSolver
+{
+    public void Validate(NewtonSolverRequest request)
+    {
+        if (/* not valid.. */)
+        {
+            throw /* exception.. */;
+        }
+    }
+}
+```
+
+```csharp
+// Right: the request validates itself
+public class NewtonSolverRequest
+{
+    // properties..
+    public void Validate()
+    {
+        if (/* not valid.. */)
+        {
+            throw /* exception.. */;
+        }
+    }
+}
+public class NewtonSolver
+{
+}
+```
 
 ## Refactor Guidance
-
 - Prefer small, safe extraction over large rewrites
 - Consolidate duplicated logic behind domain-level abstractions
 - Preserve behavior with tests before/after refactors

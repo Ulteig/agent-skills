@@ -114,6 +114,10 @@ Load the three checklists, then apply all of them to every changed file:
 - `references/security-checklist.md`
 - `references/best-practices-checklist.md`
 
+Also run the duplication search the checklists assume:
+
+- For each new reusable unit (component, hook, util, input, service), run at least one repo-wide search in the worktree for an existing equivalent before accepting it as non-duplicative. The worktree exists for exactly this; a new unit with no such search recorded is an incomplete review, not a clean one.
+
 Also check test coverage statically:
 
 - For every new or modified production code file, verify that corresponding test additions or updates exist in the diff.
