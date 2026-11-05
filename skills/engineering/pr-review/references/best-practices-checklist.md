@@ -13,7 +13,7 @@
 - Backward compatibility and migration safety
 
 ## Maintainability
-- Clear naming and module boundaries
+- Clear module boundaries
 - Avoid unnecessary complexity and deep nesting
 - Good cohesion and low coupling
 - Avoid dead code and speculative abstractions
