@@ -7,12 +7,13 @@ description: Review-only analysis of a GitHub pull request by number. Use when t
 
 Structured, review-only analysis of a GitHub PR. A PR number is required input: if it is missing or invalid, ask the user for it before doing anything else.
 
-The review hunts four classes of finding:
+The review hunts five classes of finding:
 
 - SOLID principle violations
 - DRY violations (duplication and maintainability)
 - Security vulnerabilities and reliability risks
 - General best practices (error handling, performance, testing, readability)
+- Naming (identifiers that break their construct's grammar or name the storage instead of the domain)
 
 ## Severity model
 
@@ -108,11 +109,16 @@ Before deep review, using the bundle's `scope` (file count, additions/deletions)
 
 ### 8) Perform the review
 
-Load the three checklists, then apply all of them to every changed file:
+Load the four checklists, then apply all of them to every changed file:
 
 - `references/solid-dry-checklist.md`
 - `references/security-checklist.md`
 - `references/best-practices-checklist.md`
+- `references/naming-checklist.md`
+
+Also run the naming pass:
+
+- List every identifier the diff declares or renames (function, method, class, type, field, property, variable, parameter, module) and check each one against `references/naming-checklist.md`. The list is what makes the pass exhaustive: a name is only cleared once it has been read against its construct's grammar and the **domain** rule.
 
 Also run the duplication search the checklists assume:
 
@@ -123,7 +129,7 @@ Also check test coverage statically:
 - For every new or modified production code file, verify that corresponding test additions or updates exist in the diff.
 - If production code is changed with no accompanying test changes, flag it as a **P2 Medium** finding unless the code is clearly non-testable (e.g., config, generated files, infra scripts).
 
-The step is complete only when every changed file in `pr.diff` has been run against all three checklists and every finding is recorded with a severity and file:line, not before.
+The step is complete only when every changed file in `pr.diff` has been run against all four checklists, every declared or renamed identifier has been checked in the naming pass, and every finding is recorded with a severity and file:line, not before.
 
 ### 9) Cleanup worktree and temp branch (required, always)
 
@@ -150,7 +156,7 @@ Deliver the report in this structure, then stop. This skill is review-only. Impl
 ## Findings
 
 ### P0 - Critical
-- **[path/to/file.ext:line] [Security|SOLID|DRY|BestPractice]** Title
+- **[path/to/file.ext:line] [Security|SOLID|DRY|BestPractice|Naming]** Title
   - Why this is a problem
   - Evidence
   - Recommended fix
