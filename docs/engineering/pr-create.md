@@ -17,7 +17,7 @@ You invoke this by typing `/pr-create`; the agent won't reach for it on its own.
 
 ## Prerequisites
 
-- You need the [GitHub CLI](https://cli.github.com/) (`gh`) installed and authenticated for the target repository.
+- You need the [GitHub CLI](https://cli.github.com/) (`gh`) installed and signed in for the target repository.
 - The branch must be committed. Uncommitted changes will be flagged, but the skill will not include them in the PR.
 - The branch should exist locally; if it hasn't been pushed yet, the skill will ask before pushing.
 
@@ -25,8 +25,8 @@ You invoke this by typing `/pr-create`; the agent won't reach for it on its own.
 
 A run is four beats:
 
-1. **Gather**: reads commit messages and diff summary since the base branch fork point.
-2. **Draft**: composes a PR description with Summary, Changes, and Related sections.
+1. **Gather**: reads the commit messages and the diff summary since the point where your branch left the base branch.
+2. **Draft**: writes a PR description with Summary, Changes, and Testing sections.
 3. **Review**: shows you the draft title and body for edits.
 4. **Create**: pushes the branch if needed, then creates the PR via `gh pr create`.
 
@@ -34,11 +34,11 @@ A run is four beats:
 
 The drafted description follows three sections:
 
-- **Summary**: one or two sentences on what the PR does, derived from commit messages. Use ASD-STE100 to describe it.
-- **Changes**: bullet list of key changes. These are logical changes, not code changes.
-- linked issue references extracted from commit messages (e.g., `Fixes #42`).
+- **Summary**: one or two sentences on what the PR does, written in plain English and derived from the commit messages.
+- **Changes**: a bullet list of the key changes. Each bullet is a change in behavior ("The todo list now accepts due dates."), not a change in code (`TodoList.cpp:88: add due dates`).
+- **Testing**: left blank for you to fill in.
 
-If a single well-written commit message covers the branch, it drives the summary directly. 
+If a single well-written commit message covers the branch, it drives the summary directly. A branch with many small commits is grouped by theme instead of listed one by one.
 
 ## Common questions
 
@@ -55,7 +55,8 @@ The skill infers the base from upstream tracking (`@{u}`). If your branch tracks
 
 - The agent shows you a draft title and description before creating anything.
 - The summary reads like a human wrote it because it is derived from your commits, not a raw diff dump.
-- Related issues are linked when your commit messages reference them.
+- Each Changes bullet names something a reader can test, not a file and a line number.
+- You are asked to fill in the Testing section, and for before and after screenshots when the change affects the front end.
 - A PR URL and number appear at the end.
 
 ## Where it fits
