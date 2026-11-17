@@ -14,11 +14,9 @@ Reachable only when you type them (Claude Code: `disable-model-invocation: true`
 - **[to-spec](./to-spec/SKILL.md)**: Turn the current conversation into a spec and publish it to the issue tracker.
 - **[to-tickets](./to-tickets/SKILL.md)**: Break any plan, spec, or conversation into a set of tracer-bullet tickets, each declaring its blocking edges, whether as text in a local file or as native blocking links on a real tracker.
 - **[implement](./implement/SKILL.md)**: Build the work described by a spec or set of tickets, driving `/tdd` at pre-agreed seams and closing out with `/code-review` before committing.
-- **[commit](./commit/SKILL.md)**: Commit one atomic working-tree change with an intent-rich message derived from the patch and repository context.
 - **[implement-spec](./implement-spec/SKILL.md)**: Implement a whole spec on one integration branch. Works the tickets as a task graph, running implementer subagents across the ready frontier for maximum concurrency, then closes out with `/code-review`.
 - **[wayfinder](./wayfinder/SKILL.md)**: Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on the issue tracker, resolved one at a time until the way to the destination is clear.
 - **[retro](./retro/SKILL.md)**: Suggest improvements to the coding agent's environment (navigation, automated checks, coding standards, steering files, tooling) after a session, most severe first.
-- **[pr-create](./pr-create/SKILL.md)**: Create a GitHub PR from the current branch with a description derived from commit messages and the diff.
 
 ## Model-invoked
 
@@ -32,7 +30,9 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[domain-modeling](./domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model by challenging terms, stress-testing with scenarios, and updating `GLOSSARY.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: small interfaces, clean seams, testable through the interface.
 - **[code-review](./code-review/SKILL.md)**: Two-axis review of the diff since a fixed point: **Standards** (does it follow the repo's coding standards, plus a Fowler smell baseline?) and **Spec** (does it faithfully implement the originating issue/spec?), run as parallel sub-agents.
+- **[commit](./commit/SKILL.md)**: Commit one atomic working-tree change with an intent-rich message derived from the patch and repository context. Reach for it when a coherent change is ready to record or the user asks to commit.
 - **[pr](./pr/SKILL.md)**: The shape a pull request body should take: a summary as the smallest visual that makes the change clear, before/after evidence that it works, and a merge-danger call (one-way or two-way door, plus blast radius).
+- **[pr-create](./pr-create/SKILL.md)**: Create a GitHub PR from the current branch: draft a description from the branch's commit messages and diff, show it for edits, then create it. Reach for it when the user wants to open a pull request or a committed branch is ready for review.
 - **[pr-review](./pr-review/SKILL.md)**: Review-only analysis of a GitHub pull request by number in an isolated worktree, checking SOLID, DRY, security, best practices, and naming.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)**: Resolve an in-progress merge or rebase by tracing each side's intent, reconciling conflicts, running checks, and finishing the operation.
 - **[wizard](./wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.

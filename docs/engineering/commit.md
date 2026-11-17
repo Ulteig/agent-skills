@@ -6,7 +6,7 @@ An existing index is treated as a deliberate boundary: staged work is committed 
 
 ## When to reach for it
 
-You invoke this by typing `/commit`; the skill won't run on its own. Reach for it when the work is ready and you want the repository history to preserve its intent, not merely the names of edited files.
+Type `/commit`, or the agent reaches for it automatically when a coherent change is ready to record. Either way, it stages one atomic change and commits it, pausing only when the boundary is unclear or a suspicious file appears. Use it when the work is ready and you want the repository history to preserve its intent, not merely the names of edited files.
 
 | Situation | Reach for |
 | --- | --- |
@@ -36,7 +36,7 @@ The result is an intent-rich [primary source](https://www.aihero.dev/ai-coding-d
 
 **Does it only draft a message, or does it commit?**
 
-It creates the commit. Typing `/commit` is the authorization to do so. It pauses only when the intended boundary is ambiguous, suspicious files appear, or Git reports a condition that needs your decision.
+It creates the commit. Reaching for the skill, by you or by the agent, is the authorization to do so. It pauses only when the intended boundary is ambiguous, suspicious files appear, or Git reports a condition that needs your decision.
 
 **Why did it leave my unstaged changes behind?**
 

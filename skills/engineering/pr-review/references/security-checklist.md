@@ -1,32 +1,37 @@
 # Security Checklist for PR Reviews
 
 ## Input and Injection
-- SQL/NoSQL/command injection from string interpolation
-- Path traversal (`../`) in file operations
-- Unsafe deserialization of untrusted input
-- Regex patterns vulnerable to ReDoS
+- Flag: SQL/NoSQL/command injection from string interpolation
+- Flag: Path traversal (`../`) in file operations
+- Flag: Unsafe deserialization of untrusted input
+- Flag: Regex patterns vulnerable to ReDoS
 
 ## Web and API Security
-- XSS via unescaped rendering or unsafe HTML insertion
-- CSRF gaps for state-changing operations
-- Missing authentication or weak auth checks
-- Missing authorization/tenant ownership checks (IDOR)
+- Flag: XSS via unescaped rendering or unsafe HTML insertion
+- Flag: CSRF gaps for state-changing operations
+- Flag: Missing authentication or weak auth checks
+- Flag: Missing authorization/tenant ownership checks (IDOR)
+- Flag: Authorization removed or not carried over when a controller or endpoint is added, moved, or rewritten (`[Authorize]`, base-class auth)
+- Flag: Auth tokens not passed on calls to a secured API
+- Flag: `dangerouslySetInnerHTML` or raw HTML built from data
 
 ## Secrets and Sensitive Data
-- API keys/tokens/passwords committed in code/config
-- Sensitive data logged in plaintext
-- Overexposed error details to clients
+- Flag: API keys/tokens/passwords committed in code/config
+- Flag: Sensitive data logged in plaintext
+- Flag: A new key or credential with a wider scope than needed (ask what it can reach)
+- Flag: Config defaults that point at prod, or hard-coded hosts and environments
+- Flag: Overexposed error details to clients
 
 ## Data Integrity and Concurrency
-- Race conditions (check-then-act / TOCTOU)
-- Missing transactions for multi-step writes
-- Lost updates from concurrent edits
-- Missing idempotency for retryable operations
+- Flag: Race conditions (check-then-act / TOCTOU)
+- Flag: Missing transactions for multi-step writes
+- Flag: Lost updates from concurrent edits
+- Flag: Missing idempotency for retryable operations
 
 ## Dependency and Platform Risk
-- Outdated/vulnerable dependencies
-- Insecure defaults (permissive CORS, weak crypto)
-- Missing timeouts/retries/rate limits on outbound calls
+- Flag: Outdated/vulnerable dependencies
+- Flag: Insecure defaults (permissive CORS, weak crypto)
+- Flag: Missing timeouts/retries/rate limits on outbound calls
 
 ## Reporting
 For each security issue include:

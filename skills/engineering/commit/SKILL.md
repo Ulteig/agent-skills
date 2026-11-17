@@ -1,73 +1,80 @@
 ---
 name: commit
-description: Commit the current working directory's changes with an intent-rich message derived from the patch and repository context.
-disable-model-invocation: true
+description: "Commit the changes in the current working directory with a message that states their intent, based on the patch and the repository context. Use when a coherent change is ready to record, when the user asks to commit, or after work completed outside /implement leaves a deliberate follow-up to commit."
 ---
 
-Create one **atomic commit** from the intended working-tree changes. Invoking this skill authorizes a commit, not an indiscriminate `git add`.
+Create one atomic commit from the changes that the user intends. An atomic commit contains one intent and nothing else. This skill gives you permission to commit.
 
-## 1. Establish the boundary
+## 1. Find the boundary
 
-1. Confirm the current directory is a Git repository on a branch. If HEAD is detached, stop and tell the user.
-2. Detect an in-progress merge, rebase, cherry-pick, or revert. Stop and name the operation; it owns the next commit.
-3. Read the repository's Git instructions, then inspect:
+1. Make sure that the current directory is a Git repository and that HEAD is on a branch. If HEAD is detached, stop and tell the user.
+2. Look for a merge, rebase, cherry-pick, or revert that is in progress. If you find one, stop and tell the user its name.
+3. Read the Git instructions of the repository. Then read:
    - `git status --short --branch`
-   - the staged diff and stat
-   - the unstaged diff and stat
-   - the contents of relevant untracked files
-4. Account for every changed path as **included**, **excluded**, or **suspicious**. Suspicious paths include likely secrets, generated output, vendored dependencies, binaries, and unexpectedly large files; surface them before staging.
+   - The staged diff and its stat
+   - The unstaged diff and its stat
+   - The contents of each relevant untracked file
+4. Put each changed path into one of three groups: included, excluded, or suspicious. A suspicious path is a likely secret, generated output, a vendored dependency, a binary, or an unexpectedly large file. Show each suspicious path to the user before you stage anything.
 
-The index is a deliberate boundary. If it already contains changes, treat the staged patch as the commit candidate and leave unstaged and untracked changes alone unless the user explicitly expands the scope. If the index is empty, infer the candidate from the working tree.
+The index (the staging area) is a boundary that the user set on purpose. The candidate is the set of changes that you plan to commit.
+
+- If the index already contains changes, the staged patch is the candidate. Keep unstaged and untracked changes out of the commit unless the user explicitly expands the scope.
+- If the index is empty, find the candidate in the working tree.
 
 ## 2. Make it atomic
 
-State the single intent shared by every candidate hunk. Tests, documentation, and generated metadata belong when they directly support that intent.
+Write down the one intent that every hunk in the candidate shares. A hunk is one block of changed lines in a diff. Tests, documentation, and generated metadata belong in the commit when they directly support that intent.
 
-If the candidate contains independent intents, propose a split and ask which one to commit now. One invocation creates one commit. Stage exact paths or hunks; preserve unrelated changes for a later commit.
+If the candidate contains more than one independent intent, propose a split. Then ask the user which intent to commit now. One run of this skill creates one commit. Stage exact paths or hunks. Keep unrelated changes in the working tree for a later commit.
 
-This step is complete when every candidate hunk serves the stated intent and every other change remains outside the index.
+This step is done when every hunk in the candidate serves the intent and every other change is outside the index.
 
-## 3. Reconstruct intent
+## 3. Find the intent
 
-Build the commit's story from the strongest available evidence, in this order:
+Build the story of the commit from the evidence. Use the strongest evidence first, in this order:
 
-1. The user's explicit request and the current conversation.
-2. The staged patch: behavior, tests, documentation, and removed behavior.
-3. A linked ticket, spec, PR, ADR, or project context document when its identity is unambiguous.
-4. The branch name, for issue identifiers and terse intent clues.
+1. The explicit request of the user and the current conversation.
+2. The staged patch: new behavior, tests, documentation, and removed behavior.
+3. A linked ticket, spec, PR, ADR, or project context document, if you can identify it with certainty.
+4. The branch name, for issue identifiers and short clues about the intent.
 5. Recent commit messages, for house style only.
 
-Treat the branch name as a clue, never as proof. Verify issue references before using them. Do not invent rationale that the evidence does not support.
+The branch name is a clue, not proof. Make sure that each issue reference is correct before you use it. Write only the reasons that the evidence supports.
 
-Read enough recent history to detect the repository's subject style, use of Conventional Commits, scope vocabulary, body shape, and issue-footer conventions. Local convention outranks the fallback below.
+Read enough recent history to learn the style of the repository:
+
+- The form of the subject line
+- The use of Conventional Commits
+- The scope words
+- The shape of the body
+- The form of issue footers
+
+The local style takes priority over the default rules in step 4.
 
 ## 4. Write the message
 
-The subject names the outcome of the patch, not the act of editing it. Follow the repository's established form. When no clear convention exists:
+The subject states the result of the patch, not the act of editing. Use the established form of the repository. If the repository has no clear style, use these default rules:
 
-- use an imperative subject of at most 72 characters;
-- omit a trailing period;
-- add a body only when the motivation, behavior, or trade-off is not obvious from the subject;
-- explain **why** and the resulting behavior, not a file-by-file diff;
-- include verified issue references as footers;
-- mention tests only when their result is known from this session.
+- Write the subject in the imperative mood, with 72 characters at most.
+- End the subject without a period.
+- Add a body only when the subject does not make the motivation, the behavior, or the trade-off clear.
+- In the body, explain why the change exists and how the code behaves now. Describe the change as a whole, not file by file.
 
-Use a Conventional Commit subject only when the repository's history consistently does. Never add `Closes`, `Fixes`, or another closing keyword unless the user requested that side effect or the local convention clearly requires it.
+Use a Conventional Commit subject only if the history of the repository uses it consistently. A closing keyword such as `Closes` or `Fixes` closes the issue when the commit merges. Add one only if the user asked for it or the local style clearly requires it.
 
-## 5. Commit the reviewed patch
+## 5. Commit the patch
 
-1. Stage only the atomic candidate. Preserve any pre-existing staged boundary unless the user approved changing it.
-2. Review `git diff --cached --check`, its stat, its file list, and the complete staged diff.
-3. Reconcile that review with the path accounting from step 1. If the scope or message remains ambiguous, show the proposed scope and message and ask before committing.
-4. Commit with the composed message, using a message file when it has a body.
+1. Stage only the candidate. If the index already had staged changes, keep that boundary unless the user approved a change.
+2. Read the output of `git diff --cached --check`, the stat, the file list, and the full staged diff.
+3. Compare this output with the path groups from step 1. If the scope or the message is still unclear, show the proposed scope and message to the user. Ask before you commit.
+4. Commit with the message. If the message has a body, pass it in a message file.
 
+## 6. Inspect the result
 
-## 6. Verify
+Read the new commit and the new status of the working tree. Then report to the user:
 
-Inspect the resulting commit and the new working-tree status. Report:
+- The commit hash and subject
+- The paths in the commit
+- Each change that is still staged, unstaged, or untracked
 
-- the commit hash and subject;
-- the paths committed;
-- any changes left staged, unstaged, or untracked.
-
-Completion means exactly one new commit contains every intended hunk and no unrelated hunk, and all remaining changes are named to the user.
+The skill is done when exactly one new commit contains every intended hunk and no unrelated hunk. You must also name every remaining change to the user.

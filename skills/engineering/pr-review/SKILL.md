@@ -15,14 +15,18 @@ The review hunts five classes of finding:
 - General best practices (error handling, performance, testing, readability)
 - Naming (identifiers that break their construct's grammar or name the storage instead of the domain)
 
+The repo's own documented conventions (see step 8) add further checks on top of these.
+
 ## Severity model
 
 Every finding carries exactly one severity:
 
 - **P0 Critical**: merge-blocking vulnerability/correctness/data-loss risk
-- **P1 High**: major reliability/security/design issue
-- **P2 Medium**: maintainability or moderate risk issue
-- **P3 Low**: nits, style, optional improvements
+- **P1 High**: major reliability/security/design issue. Examples: a hand-edited or deleted shipped migration, config pointing at prod or a hard-coded host, dropped authorization, reused lookup IDs, ID arithmetic that can throw
+- **P2 Medium**: maintainability or moderate risk issue. Examples: business logic in a controller, magic numbers for IDs or statuses, filtering on the client, a test that cannot fail
+- **P3 Low**: nits, style, optional improvements. Examples: long lines, hard-to-read ternaries, "consider" suggestions, unclear intent that needs a question
+
+Do not report formatting that a linter or `.editorconfig` should catch. Report code the PR did not touch at most once, as P3 and optional.
 
 ## Workflow
 
@@ -76,6 +80,12 @@ Also evaluate the PR description (`body`):
 - Does it match what the code actually does?
 - Flag a **P3 Low** finding if the description is missing, vague, or inconsistent with the implementation.
 
+Also compare the PR to its ticket (read the linked issue with `gh issue view` when one is referenced):
+
+- Does every changed area belong to the ticket? Unrelated changes (from another branch, a find-and-replace, or a removed feature the ticket did not mention) are a finding. Ask whether they are intended.
+- Is anything the ticket asked for missing (for example "endpoints" plural, but one added)?
+- Does the PR leave follow-up work with no ticket?
+
 ### 5) Check CI/CD status
 
 Read CI status from the bundle's `ci` object (`ci.failing`, `ci.pending`).
@@ -109,12 +119,25 @@ Before deep review, using the bundle's `scope` (file count, additions/deletions)
 
 ### 8) Perform the review
 
-Load the four checklists, then apply all of them to every changed file:
+Load the four checklists, then apply all of them to every changed file. Each checklist item has a label:
+
+- **Expected**: desired behavior. A violation is a candidate finding.
+- **Flag**: an unwanted pattern. Its presence is a candidate finding.
+- **Review**: an action to gather evidence before deciding whether there is a finding.
+
+Confirm candidate findings against the code and repo conventions before reporting them. Naming tables use **Good** for desired examples and **Flag** for unwanted examples. Severity and reporting sections describe how to report findings.
+
+The checklists are:
 
 - `references/solid-dry-checklist.md`
 - `references/security-checklist.md`
 - `references/best-practices-checklist.md`
 - `references/naming-checklist.md`
+
+Also read the repo's own conventions before judging, because many of the strongest rules are local:
+
+- From the worktree, read `AGENTS.md`, `CLAUDE.md`, `GLOSSARY.md`/`CONTEXT.md`, and any ADRs that touch the changed areas. Treat each stated rule as an extra checklist item, and cite the file when a finding comes from it.
+- Look at two or three neighboring files to learn the pattern the repo currently uses, and which patterns it is moving away from. New code on a legacy pattern is a finding even when the legacy pattern still works.
 
 Also run the naming pass:
 
@@ -124,12 +147,21 @@ Also run the duplication search the checklists assume:
 
 - For each new reusable unit (component, hook, util, input, service), run at least one repo-wide search in the worktree for an existing equivalent before accepting it as non-duplicative. The worktree exists for exactly this; a new unit with no such search recorded is an incomplete review, not a clean one.
 
+Also write findings as questions when intent is unclear:
+
+- If the code might be correct for a reason you cannot see (a business rule, a ticket detail, a migration plan), do not assert a defect. Ask ("Is this intentional? What happens when X?"), say what answer would resolve it, and list it under **Questions for the author**. Use P3 unless the risk is high when the answer is "no".
+
 Also check test coverage statically:
 
 - For every new or modified production code file, verify that corresponding test additions or updates exist in the diff.
 - If production code is changed with no accompanying test changes, flag it as a **P2 Medium** finding unless the code is clearly non-testable (e.g., config, generated files, infra scripts).
 
-The step is complete only when every changed file in `pr.diff` has been run against all four checklists, every declared or renamed identifier has been checked in the naming pass, and every finding is recorded with a severity and file:line, not before.
+Also check test quality for every test the diff adds or changes (see "Testing and Verification" in `references/best-practices-checklist.md`):
+
+- Could the test fail if the code were wrong? Look for test data that is the same everywhere, redundant boundary cases, duplicate tests, and tests of database-level behavior at the wrong layer.
+- A test that cannot fail is a **P2 Medium** finding.
+
+The step is complete only when every changed file in `pr.diff` has been run against all four checklists and the repo conventions, every declared or renamed identifier has been checked in the naming pass, and every finding is recorded with a severity and file:line, not before.
 
 ### 9) Cleanup worktree and temp branch (required, always)
 
@@ -172,9 +204,18 @@ Deliver the report in this structure, then stop. This skill is review-only. Impl
 
 ---
 
+## Questions for the author
+(Only when intent was unclear. Omit this section if empty.)
+- **[path/to/file.ext:line]** Question, and what answer would resolve it
+
+---
+
 ## Coverage Notes
 - Areas reviewed
 - Areas not fully verified (if any)
+
+## Follow-up tickets
+(Work the PR leaves undone, or cleanup worth a ticket. Omit if empty.)
 
 ## Recommended Next Steps
 1. ...

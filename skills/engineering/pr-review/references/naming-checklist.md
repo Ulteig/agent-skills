@@ -38,30 +38,44 @@ Example: `invoiceJson` (at a serialization boundary) or `rawBytes` (in a codec).
 
 ## Vocabulary consistency
 
-- Use one word for one concept.
+- Expected: Use one word for one concept.
   Check the codebase (including `GLOSSARY.md`, `CONTEXT.md`, or ADRs) for existing terms.
   Example: Use `customer` if the codebase already uses `customer`.
-- Use one verb for one operation.
+- Expected: Use one verb for one operation.
   Example: Do not mix `fetch`, `get`, and `load` for the same operation.
+
+## Distinguishing names
+
+- Expected: A number is not a distinguishing word. Flag `TableComponent2`, `Table5ViewModel`, `invoice2`. Name what differs (`previousInvoice`).
+- Flag: Version suffixes (`V5`, `V6`) are a finding unless the version is the domain.
+- Flag: Names that are too generic for their scope: `TableService`, `HelperClass`, `Single`, `Dummy`, `Limited`. Ask "which table, for what purpose?"
+- Expected: Order a family of names from least specific to most specific (like `yyyy-mm-dd`), so related names sort together.
+- Expected: A file name matches the main component or class in it. A component name matches its siblings (do not add `Form` to one of many).
+- Expected: Follow the prefix convention of the parent (`RrProjectTransferAgreementX` stays `RrProject...`).
+- Expected: A collection (including a database set) is plural. A name that says `list` or `many` should return many (do not use a list for "at most one").
+- Expected: An id property says what it is: `municipalityId`, not `municipality`. Do not mix `userId` and `authId` for one concept.
+- Expected: Casing: PascalCase for types and enums, camelCase for locals and members. Do not put the construct in the name (`enumFoo`).
+- Expected: A class name is a noun (`ShpExtractor`, not `ExtractShps`).
+- Expected: A name must not hide a side effect: a "check" that also sets is a finding.
 
 ## Honesty
 
-- Names must match the implementation.
+- Expected: Names must match the implementation.
   A name that lies is a finding.
   Example: `getUser` should not create a user.
   Example: `validate` should not mutate state.
   Example: `isReady` should not have side effects.
-- Include units and absence in the name where important.
+- Expected: Include units and absence in the name where important.
   Example: Use `timeoutMs`.
   Example: Use `findUser` if the function can return nothing.
   Example: Use `getUser` if the function throws when a user is missing.
 
 ## Scope and length
 
-- Scale name length with scope.
+- Expected: Scale name length with scope.
   A short name like `i` is acceptable in a small loop.
   A short name like `i` is a finding if it is a class field.
-- Use abbreviations only for universal domain terms.
+- Expected: Use abbreviations only for universal domain terms.
   Example: `id`, `url`, `sku`.
   Private abbreviations like `custMgr` are findings.
 
