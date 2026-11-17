@@ -6,7 +6,7 @@ The defining constraint is that it derives the PR description from what is alrea
 
 ## When to reach for it
 
-You invoke this by typing `/pr-create`; the agent won't reach for it on its own. Use it after you have committed work to a branch and are ready to open a PR for review.
+Type `/pr-create`, or the agent reaches for it automatically when committed work on a branch is ready to open a PR for review. Either way, it shows you the draft and asks before creating the PR.
 
 | Situation | Reach for |
 | --- | --- |

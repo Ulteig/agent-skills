@@ -1,7 +1,6 @@
 ---
 name: commit
-description: Commit the changes in the current working directory with a message that states their intent, based on the patch and the repository context.
-disable-model-invocation: true
+description: "Commit the changes in the current working directory with a message that states their intent, based on the patch and the repository context. Use when a coherent change is ready to record, when the user asks to commit, or after work completed outside /implement leaves a deliberate follow-up to commit."
 ---
 
 Create one atomic commit from the changes that the user intends. An atomic commit contains one intent and nothing else. This skill gives you permission to commit.

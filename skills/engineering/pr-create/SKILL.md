@@ -1,7 +1,6 @@
 ---
 name: pr-create
-description: "Create a GitHub PR from the current branch with a well-crafted description."
-disable-model-invocation: true
+description: "Create a GitHub PR from the current branch. Use when the user wants to open or create a pull request, says 'create a PR' or 'open a pull request', or when committed work on a branch is ready to put up for review."
 ---
 
 Create a pull request on GitHub from the current branch.
