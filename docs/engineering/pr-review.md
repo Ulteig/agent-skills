@@ -23,6 +23,10 @@ Those outputs are candidate evidence only. The reviewer still reads the full cha
 
 Naming gets its own pass rather than a line in the best-practices list. The leading rule is **domain over representation**: a name says what a value means in the problem (`users`, `priceBySku`), not how it is stored (`list`, `dataMap`). Each construct also has a grammar: functions and methods are verb phrases, booleans are predicates (`isActive`, `canRetry`), collections are plural nouns. The reviewer lists every identifier the diff declares or renames and checks each one, greps for the term the codebase already uses before accepting a new one, and proposes a concrete replacement for every finding. A name that lies about what the code does, or one on a public API or persisted schema, is P2; the rest are P3.
 
+## Repo conventions, ticket match, and questions
+
+The reviewer reads the repo's own docs (`AGENTS.md`, `CLAUDE.md`, glossary, ADRs) and neighboring files before judging, and treats the rules it finds as extra checks. It also compares the PR to its linked ticket, so unrelated changes and missing asks show up. When intent is unclear, a finding becomes a question in a **Questions for the author** section, not a claimed defect. The checklists also cover magic values, data and API design, migrations and config hygiene, and test quality (tests that cannot fail).
+
 ## Common questions
 
 **Does the helper replace the review?**
@@ -42,6 +46,8 @@ The review stops at preflight and tells you exactly what is missing. The helper 
 - The output includes the PR title, URL, changed-file count, diff, and CI state.
 - High-risk files and automated matches are treated as review leads, not unverified findings.
 - Every changed file is considered against the SOLID/DRY, security, best-practices, and naming checklists.
+- Findings that come from a repo rule cite the file that states it.
+- Unclear intent shows up as a question for the author, not as a defect.
 - Naming findings name the identifier, the rule it breaks, and a replacement name.
 - The final report contains line-specific evidence, severity, recommended fixes, coverage notes, and an overall assessment.
 - The review worktree and temporary branch are gone when the review finishes.

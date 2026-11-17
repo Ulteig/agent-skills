@@ -11,10 +11,15 @@
 - CSRF gaps for state-changing operations
 - Missing authentication or weak auth checks
 - Missing authorization/tenant ownership checks (IDOR)
+- Authorization removed or not carried over when a controller or endpoint is added, moved, or rewritten (`[Authorize]`, base-class auth)
+- Auth tokens not passed on calls to a secured API
+- `dangerouslySetInnerHTML` or raw HTML built from data
 
 ## Secrets and Sensitive Data
 - API keys/tokens/passwords committed in code/config
 - Sensitive data logged in plaintext
+- A new key or credential with a wider scope than needed (ask what it can reach)
+- Config defaults that point at prod, or hard-coded hosts and environments
 - Overexposed error details to clients
 
 ## Data Integrity and Concurrency

@@ -5,6 +5,9 @@
 ### SRP (Single Responsibility)
 - Classes/modules doing unrelated jobs
 - Methods handling orchestration + domain logic + persistence together
+- Controllers or UI components that hold business logic
+- Files or components that keep growing (suggest sub-components or a service)
+- Several classes or components in one file
 - Multiple reasons to change in one component
 
 ### OCP (Open/Closed)
@@ -23,6 +26,8 @@
 ### DIP (Dependency Inversion)
 - Business logic coupled to concrete infrastructure classes
 - Hard-coded dependency creation instead of abstraction/injection
+- Skipping the repo's documented layers (for example a controller or service using the database context directly instead of the unit of work or repository the repo uses)
+- New code on a legacy pattern the repo is moving away from (check `AGENTS.md`, ADRs, and neighboring code)
 
 ## DRY
 
@@ -31,6 +36,10 @@
 - Copy-pasted mapping/transformation code
 - Repeated literals, magic strings, and constants
 - Similar queries or API calls implemented multiple times
+- The same block repeated several times with one value changed (drive it from data or a function)
+- If/else branches where only one argument differs
+- Copied helpers or models (check for an existing equivalent, and move shared code to the shared project)
+- A new query that extends an existing one, which fetches extra fields. Prefer a narrow new query
 - For every new reusable component/class/etc, grep the repo for an existing thing that already does this; prefer extending it.
 
 ## Behavior Placement

@@ -44,6 +44,20 @@ Example: `invoiceJson` (at a serialization boundary) or `rawBytes` (in a codec).
 - Use one verb for one operation.
   Example: Do not mix `fetch`, `get`, and `load` for the same operation.
 
+## Distinguishing names
+
+- A number is not a distinguishing word. Flag `TableComponent2`, `Table5ViewModel`, `invoice2`. Name what differs (`previousInvoice`).
+- Version suffixes (`V5`, `V6`) are a finding unless the version is the domain.
+- Names that are too generic for their scope: `TableService`, `HelperClass`, `Single`, `Dummy`, `Limited`. Ask "which table, for what purpose?"
+- Order a family of names from least specific to most specific (like `yyyy-mm-dd`), so related names sort together.
+- A file name matches the main component or class in it. A component name matches its siblings (do not add `Form` to one of many).
+- Follow the prefix convention of the parent (`RrProjectTransferAgreementX` stays `RrProject...`).
+- A collection (including a database set) is plural. A name that says `list` or `many` should return many (do not use a list for "at most one").
+- An id property says what it is: `municipalityId`, not `municipality`. Do not mix `userId` and `authId` for one concept.
+- Casing: PascalCase for types and enums, camelCase for locals and members. Do not put the construct in the name (`enumFoo`).
+- A class name is a noun (`ShpExtractor`, not `ExtractShps`).
+- A name must not hide a side effect: a "check" that also sets is a finding.
+
 ## Honesty
 
 - Names must match the implementation.
