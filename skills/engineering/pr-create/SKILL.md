@@ -34,13 +34,12 @@ Collect this material for the PR description:
 - **Commit messages** since the base branch and the current branch split:
   - Find the split point: `merge_base=$(git merge-base origin/<baseBranch> HEAD)`
   - List the commits: `git log "$merge_base..HEAD" --oneline --no-decorate`
-  - If there is only one commit, use its full message instead: `git log -1 --format=%B`
 - **Diff summary**: `git diff --stat "$merge_base" HEAD`
 - **Changed files**: `git diff --name-only "$merge_base" HEAD`
 
 ### 4) Draft the PR description
 
-Write the description from the material you gathered. Use this structure:
+Write the description from the material you gathered. Use this structure for every PR, including PRs with a single commit:
 
 ```markdown
 ## Summary

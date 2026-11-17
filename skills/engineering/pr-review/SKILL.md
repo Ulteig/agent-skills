@@ -119,7 +119,15 @@ Before deep review, using the bundle's `scope` (file count, additions/deletions)
 
 ### 8) Perform the review
 
-Load the four checklists, then apply all of them to every changed file:
+Load the four checklists, then apply all of them to every changed file. Each checklist item has a label:
+
+- **Expected**: desired behavior. A violation is a candidate finding.
+- **Flag**: an unwanted pattern. Its presence is a candidate finding.
+- **Review**: an action to gather evidence before deciding whether there is a finding.
+
+Confirm candidate findings against the code and repo conventions before reporting them. Naming tables use **Good** for desired examples and **Flag** for unwanted examples. Severity and reporting sections describe how to report findings.
+
+The checklists are:
 
 - `references/solid-dry-checklist.md`
 - `references/security-checklist.md`

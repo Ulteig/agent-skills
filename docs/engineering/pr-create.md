@@ -38,7 +38,7 @@ The drafted description follows three sections:
 - **Changes**: a bullet list of the key changes. Each bullet is a change in behavior ("The todo list now accepts due dates."), not a change in code (`TodoList.cpp:88: add due dates`).
 - **Testing**: left blank for you to fill in.
 
-If a single well-written commit message covers the branch, it drives the summary directly. A branch with many small commits is grouped by theme instead of listed one by one.
+Every PR uses these three sections, even when the branch has only one commit. A well-written commit message can guide the summary. A branch with many small commits is grouped by theme instead of listed one by one.
 
 ## Common questions
 

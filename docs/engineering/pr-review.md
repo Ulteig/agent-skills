@@ -27,6 +27,14 @@ Naming gets its own pass rather than a line in the best-practices list. The lead
 
 The reviewer reads the repo's own docs (`AGENTS.md`, `CLAUDE.md`, glossary, ADRs) and neighboring files before judging, and treats the rules it finds as extra checks. It also compares the PR to its linked ticket, so unrelated changes and missing asks show up. When intent is unclear, a finding becomes a question in a **Questions for the author** section, not a claimed defect. The checklists also cover magic values, data and API design, migrations and config hygiene, and test quality (tests that cannot fail).
 
+Each review criterion states its direction:
+
+- **Expected** marks desired behavior. A violation is a candidate finding.
+- **Flag** marks an unwanted pattern. Its presence is a candidate finding.
+- **Review** marks an evidence-gathering action, not a defect by itself.
+
+For example, API- or database-side filtering and sorting are expected behavior. Fetching everything to filter or sort on the client violates that criterion.
+
 ## Common questions
 
 **Does the helper replace the review?**
